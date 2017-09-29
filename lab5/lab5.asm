@@ -20,6 +20,7 @@ _main:
 	mov		eax, 64d ; put immediate (const) value in eax
 	mov		[int_magic_number], eax ; put eax in magic_number location
 	
+while_start:
 	; prompt, call printf
 	push	str_intro
 	call	_printf
@@ -36,6 +37,13 @@ _main:
 	push	str_printfmt
 	call	_printf
 	add		esp, 8
+	
+	; compare guess and magic number
+	mov		ebx, [int_guess]
+	cmp		ebx, [int_magic_number]
+	je		exit_loop
+	jmp		while_start
+exit_loop:
 	
 	; return 0
 	mov		eax, 0
