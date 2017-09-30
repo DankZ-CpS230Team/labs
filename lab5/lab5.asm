@@ -5,7 +5,7 @@ bits 32
 
 extern _printf
 extern _scanf
-;extern rand_s
+extern _rand_s
 
 section .text
 
@@ -16,9 +16,24 @@ _main:
 	push	ebp
 	mov		ebp, esp
 	
-	; initialize magic_number
-	mov		eax, 64d ; put immediate (const) value in eax
-	mov		[int_magic_number], eax ; put eax in magic_number location
+	; generate random magic_number
+	push	int_magic_number
+	call	_rand_s
+	add		esp, 4
+	mov		ebx, 100d ; move immediate 100 into ebx for division (can't divide by immediate)
+	mov		eax, [int_magic_number] ; move magic number to eax
+	mov		edx, 0d ; move 0s to edx
+	div		ebx
+	mov		[int_magic_number], edx ; divides magic number by 100 and sets it to remainder
+									; (rand_s generates a random number from 0 to 2^31 - 1,
+									;  which is too big)
+	
+	; for debugging, prints magic number
+	; TODO: remove when lab is finished
+	push	dword [int_magic_number]
+	push	str_printfmt
+	call	_printf
+	add		esp, 8
 	
 while_start:
 	; prompt, call printf
