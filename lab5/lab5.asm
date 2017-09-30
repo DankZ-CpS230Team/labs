@@ -27,6 +27,7 @@ _main:
 	mov		[int_magic_number], edx ; divides magic number by 100 and sets it to remainder
 									; (rand_s generates a random number from 0 to 2^31 - 1,
 									;  which is too big)
+	add		dword [int_magic_number], 1	; add 1 to make it in range 1-100
 	
 	; for debugging, prints magic number
 	; TODO: remove when lab is finished
