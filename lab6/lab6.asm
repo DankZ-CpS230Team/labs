@@ -12,6 +12,7 @@ global _main
 
 _hanoi:
 	; recursive function for solving Tower of Hanoi
+	; TODO implement recursion
 	push	ebp
 	mov		ebp, esp
 	
@@ -62,6 +63,8 @@ invalid:
 	ret
 	
 valid:
+	; TODO remove PoC stuff
+	; TODO call _hanoi(num_disks, 1, 2, 3) once recursive _hanoi works
 	; PoC - call _hanoi(num_disks, 64, 128, 42)
 	; in _hanoi, print first 3 params
 	; return fourth
