@@ -10,6 +10,26 @@ section .text
 
 global _main
 
+_hanoi:
+	; recursive function for solving Tower of Hanoi
+	push	ebp
+	mov		ebp, esp
+	
+	; PoC - print first three params
+	push 	dword [ebp + 16]
+	push	dword [ebp + 12]
+	push	dword [ebp + 8]
+	push	str_move
+	call	_printf
+	add		esp, 16
+	
+	; PoC - return fourth to print
+	mov		eax, [ebp + 20]
+	
+	mov		esp, ebp
+	pop		ebp
+	ret
+
 _main:
 	; Boilerplate "function prologue"
 	push	ebp
@@ -42,10 +62,20 @@ invalid:
 	ret
 	
 valid:
-	; DEBUG - print input as first arg in str_move
-	push 	30d
-	push	20d
+	; PoC - call _hanoi(num_disks, 64, 128, 42)
+	; in _hanoi, print first 3 params
+	; return fourth
+	push	42d
+	push	128d
+	push	64d
 	push	dword [ebp - 4]
+	call	_hanoi
+	add		esp, 16
+	
+	; PoC - print return value of hanoi (though hanoi won't return anything in final ver.)
+	push 	0d
+	push	0d
+	push	eax
 	push	str_move
 	call	_printf
 	add		esp, 16
