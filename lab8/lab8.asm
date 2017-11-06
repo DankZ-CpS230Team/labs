@@ -1,4 +1,5 @@
-; CpS 230 Lab 8: Alice B. College-Student (acoll555)
+; CpS 230 Lab 8: Ryan Longacre (rlong315)
+;				 Zac Hayes (zhaye769)
 ;---------------------------------------------------
 ; Intro to DOS programming using direct BIOS calls.
 ;---------------------------------------------------
@@ -13,15 +14,43 @@ section	.text
 ; Execution starts at the beginning of the .text section
 ; (to indicate this, I'm putting a "start:" label here)
 start:
+	; Print our names to the terminal
+	mov dx, names
+	call	puts
 	; Prompt the user to enter a string
+input:
 	mov	dx, prompt
 	call	puts
 	
-	; TODO: read an ASCII char from the keyboard using BIOS keyboard services (int 0x16)
-	
-	; TODO: check to see if the character is an ASCII letter (A-Z, a-z); if not, re-prompt
+	; Read an ASCII char from the keyboard using BIOS keyboard services (int 0x16)
+	mov ah, 0
+	int 0x16
+	; Check to see if the character is an ASCII letter (A-Z, a-z); if not, re-prompt
+	cmp al, 'A'
+	jl	input
+	cmp al, 'z'
+	jg	input
+	cmp al, 'Z'
+	jle valid
+	cmp al, 'a'
+	jge valid
+	jmp input
 
-	; TODO: fill the screen with the user's favorite letter (hint: screen is 80x25 characters)
+valid:
+	; Fill the screen with the user's favorite letter (hint: screen is 80x25 characters)
+	mov ah, 2
+	mov dh, 0
+	mov dl, 0
+	int 0x10
+	
+	mov bx, 0 ; index variable for loop
+loop:
+	mov ah, 0xE
+	int 0x10
+	
+	inc bx
+	cmp bx, 2000
+	jl loop
 	
 	; Tell DOS to unload us and go back to the command prompt
 	mov	ah, 0x4c	; DOS function number (0x4c == exit program)
@@ -55,3 +84,4 @@ puts:
 
 section	.data
 prompt	db	"What is your favorite letter? ", 13, 10, 0
+names	db	"CpS 230 Lab 8: Ryan Longacre (rlong315) and Zac Hayes (zhaye769)", 13, 10, 13, 10, 0
